@@ -20,8 +20,8 @@ export default class Bar {
         let strokeSettings = {
             width: this.width,
             height: this.height,
-            color: [251, 254, 236],
-            damageColor: [213, 93, 69],
+            colorWhite: [251, 254, 236],
+            colorRed: [213, 93, 69],
             colorGreen: [116, 180, 101],
             opacity: 1,
             lineWidth: this.lineWidth,
@@ -30,8 +30,8 @@ export default class Bar {
         }
 
         let barSettings = {
-            width: this.width - this.lineWidth+20,
-            height: this.height - this.lineWidth,
+            width: this.width - (this.lineWidth/2),
+            height: this.height - (this.lineWidth/2),
             colorGreen: [116, 180, 101],
             colorLightGreen: [202, 233, 155],
             colorWhite: [251, 254, 236],
@@ -39,12 +39,9 @@ export default class Bar {
             colorDarkRed: [171, 55, 40],
             opacity: 1,
             strokeOpacity: 1,
-            get x() {return _this.x + (_this.width - this.width) / 2 },
-            get y() {return _this.y + (_this.height - this.height) / 2 }
+            get x() {return _this.x + (_this.width - this.width) },
+            get y() {return _this.y + (_this.height - this.height) }
         }
-
-
-        console.log(this.y);
 
         this.rectBar = new InnerBar(barSettings, this.ctx)
         this.stroke = new Stroke(strokeSettings, this.ctx)

@@ -40,7 +40,7 @@ export default class InnerBar {
         }
     }
 
-    damage(damage) {
+    damage(energyChange) {
         if (this.damageAnimationDone === 0) {
             this.lowerEnergy = this.energy
             this.higherEnergy = this.energy
@@ -52,7 +52,7 @@ export default class InnerBar {
         })
 
 
-        this.energy -= damage
+        this.energy -= energyChange
 
         let _this = this
 
@@ -105,15 +105,7 @@ export default class InnerBar {
         }
     }
 
-    heal(energy) {
-        if (1 - this.energy < energy) {
-            energy = 1 - this.energy
-
-            if (energy < 0.000001) {
-                return
-            }
-        } 
-
+    heal(energyChange) {
         if (this.healAnimationDone === 0) {
             this.higherEnergy = this.energy
             this.lowerEnergy = this.energy
@@ -125,7 +117,7 @@ export default class InnerBar {
         })
 
 
-        this.energy += energy
+        this.energy += energyChange
 
         let _this = this
 
@@ -157,8 +149,6 @@ export default class InnerBar {
             })
         }
     }
-
-
 
     draw(ctx) {
         //background bar

@@ -7,12 +7,16 @@ export default class Stroke {
         this.y = settings.y
         this.animDist = 60
 
-        this.idleColor = settings.color
-        this.damageColor = settings.damageColor
-        this.colorGreen = settings.colorGreen
+        this.color = settings.colorWhite
+        this.animColor = settings.colorRed 
+
+        this.colors = {
+            white: settings.colorWhite,
+            red: settings.colorRed,
+            green: settings.colorGreen
+        }
+
         this.animProgress = 0
-        this.color = this.idleColor
-        this.animColor = settings.damageColor 
         this.bounce = 0
 
         this.opacity = settings.opacity
@@ -21,14 +25,12 @@ export default class Stroke {
         this.ctx = ctx
     }
 
-    draw(ctx, bounce) {
+    draw(ctx, bounce, opactity = 1) {
         this.bounce = bounce
-
         ctx.strokeStyle = `rgba(${this.color[0]}, ${this.color[1]}, ${this.color[2]}, ${this.opacity})`
         ctx.lineWidth = this.lineWidth
 
         ctx.strokeRect(this.x - this.bounce, this.y - this.bounce, this.width + (this.bounce * 2), this.height + (this.bounce * 2))
-        // ctx.strokeRect(this.x - bounce, this.y - bounce, this.width + (bounce * 2), this.height + (bounce * 2))
     }
 
     drawAnim(progress, ctx) {
@@ -44,9 +46,18 @@ export default class Stroke {
     }
 
     drawIdleFadeIn(progress, ctx) {
-        ctx.strokeStyle = `rgba(${this.idleColor[0]}, ${this.idleColor[1]}, ${this.idleColor[2]}, ${progress})`
+        ctx.strokeStyle = `rgba(${this.colors.white[0]}, ${this.colors.white[1]}, ${this.colors.white[2]}, ${progress})`
         ctx.strokeRect(this.x - this.bounce, this.y - this.bounce, this.width + (this.bounce * 2), this.height + (this.bounce * 2))
     }
+
+    setColors(current, target, progress) {
+        let r = current[0] + ((target[0] - current[0]) * progress)
+        let g = current[1] + ((target[1] - current[1]) * progress)
+        let b = current[2] + ((target[2] - current[2]) * progress)
+
+        return [r, g, b]
+    }
+
 
     damage() {
         let _this = this
@@ -61,7 +72,7 @@ export default class Stroke {
             {   
                 val: 1,
                 onUpdate: function() {
-                    _this.color = _this.setColors(_this.idleColor, _this.damageColor, this.ratio)
+                    _this.color = _this.setColors(_this.colors.white, _this.colors.red, this.ratio)
                 },
                 onComplete: () => {
                     this.expand()
@@ -71,59 +82,6 @@ export default class Stroke {
         )
 
         TweenMax.delayedCall(1.24, () => this.expand())
-    }
-
-    heal() {
-        let _this = this
-
-        let tweenObj = {
-            val: 0
-        }
-
-        TweenMax.to(
-            tweenObj, 
-            0.5, 
-            {   
-                val: 1,
-                onUpdate: function() {
-                    _this.color = _this.setColors(_this.idleColor, _this.colorGreen, this.ratio)
-                },
-                onComplete: () => {
-                    this.fadeInIdleHeal()
-                    this.colorProgress = 0
-                }
-            }
-        )
-    }
-
-    setColors(current, target, progress) {
-        let r = current[0] + ((target[0] - current[0]) * progress)
-        let g = current[1] + ((target[1] - current[1]) * progress)
-        let b = current[2] + ((target[2] - current[2]) * progress)
-
-        return [r, g, b]
-    }
-
-    fadeInIdleHeal() {
-        let _this = this
-
-        let tweenObj = {
-            val: 0
-        }
-
-        TweenMax.to(
-            tweenObj, 
-            0.8, 
-            {   
-                val: 1,
-                onUpdate: function() {
-                    _this.drawIdleFadeIn(this.ratio, _this.ctx)
-                },
-                onComplete: () => {
-                    this.color = this.idleColor
-                }
-            }
-        )
     }
 
     expand() {
@@ -140,10 +98,53 @@ export default class Stroke {
                 val: 1,
                 onUpdate: function() {
                     _this.drawAnim(this.ratio, _this.ctx)
-                    _this.drawIdleFadeIn(this.ratio, _this.ctx)
+                    _this.color = _this.setColors(_this.colors.red, _this.colors.white, this.ratio)
+
                 },
                 onComplete: () => {
-                    this.color = this.idleColor
+                    this.color = this.colors.white
+                }
+            }
+        )
+    }
+
+    heal() {
+        let _this = this
+
+        let tweenObj = {
+            val: 0
+        }
+
+        TweenMax.to(
+            tweenObj, 
+            0.5, 
+            {   
+                val: 1,
+                onUpdate: function() {
+                    _this.color = _this.setColors(_this.colors.white, _this.colors.green, this.ratio)
+                },
+                onComplete: () => {
+                    this.fadeInIdleHeal()
+                    this.colorProgress = 0
+                }
+            }
+        )
+    }
+
+    fadeInIdleHeal() {
+        let _this = this
+
+        let tweenObj = {
+            val: 0
+        }
+
+        TweenMax.to(
+            tweenObj, 
+            0.8, 
+            {   
+                val: 1,
+                onUpdate: function() {
+                    _this.color = _this.setColors(_this.colors.green, _this.colors.white, this.ratio)
                 }
             }
         )

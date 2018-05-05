@@ -9,8 +9,8 @@ const ctx = canvas.getContext('2d')
 ctx.imageSmoothingEnabled = false
 
 let barSettings = {
-    width: 602,
-    height: 100,
+    width: 402,
+    height: 50,
     lineWidth: 4,
     get x() {return (canvas.width/2) - (this.width/2)},
     get y() {return (canvas.height/2) - (this.height/2)}
