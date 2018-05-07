@@ -9,33 +9,33 @@ const ctx = canvas.getContext('2d')
 ctx.imageSmoothingEnabled = false
 
 let barSettings = {
-    width: 402,
-    height: 50,
-    lineWidth: 4,
-    get x() {return (canvas.width/2) - (this.width/2)},
-    get y() {return (canvas.height/2) - (this.height/2)}
+  width: 402,
+  height: 50,
+  lineWidth: 4,
+  get x() {return (canvas.width/2) - (this.width/2)},
+  get y() {return (canvas.height/2) - (this.height/2)}
 }
 
 let bar = new Bar(barSettings, ctx)
 
 window.addEventListener('keydown', (event) => {
-    if (event.keyCode === 32) {
-        bar.damage(0.1)
-    } else if (event.keyCode === 72) {
-        bar.heal(0.1)
-    }
-} )
+  if (event.keyCode === 32) {
+    bar.damage(0.1)
+  } else if (event.keyCode === 72) {
+    bar.heal(0.1)
+  }
+})
 
 function drawBg(color) {
-    ctx.fillStyle= `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)` 
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle= `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)` 
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function update() {
-    drawBg([242, 218, 127])
-    bar.draw(ctx)
+  drawBg([242, 218, 127])
+  bar.draw(ctx)
 
-    requestAnimationFrame(update);
+  requestAnimationFrame(update);
 }
 
 update();
